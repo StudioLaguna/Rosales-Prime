@@ -207,26 +207,40 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   background: var(--black);
 }
 
-/* Patron damero racing sutil al fondo */
-.hero::before {
-  content: '';
+/* Imagen de fondo con parallax */
+.hero__bg {
   position: absolute;
   inset: 0;
-  background-image:
-    repeating-conic-gradient(rgba(209,0,0,0.04) 0% 25%, transparent 0% 50%);
-  background-size: 80px 80px;
-  background-position: right top;
-  background-repeat: repeat;
-  mask-image: linear-gradient(to left, rgba(0,0,0,0.6) 0%, transparent 60%);
-  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.6) 0%, transparent 60%);
+  z-index: 0;
+  will-change: transform;
+}
+.hero__bg-img {
+  width: 100%;
+  height: 115%;          /* margen extra para el desplazamiento parallax */
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  transform-origin: center top;
+  /* Empieza con transform en JS; sin JS se ve normal */
 }
 
 .hero__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(105deg, rgba(10,10,10,1) 45%, rgba(10,10,10,0.5) 100%);
+  z-index: 1;
+  /* Degradado fuerte desde la izquierda para legibilidad del texto
+     + capa oscura general para que la imagen no compita con la tipografía */
+  background:
+    linear-gradient(105deg,
+      rgba(10,10,10,0.96) 0%,
+      rgba(10,10,10,0.80) 45%,
+      rgba(10,10,10,0.35) 100%),
+    linear-gradient(to bottom,
+      rgba(10,10,10,0.3) 0%,
+      rgba(10,10,10,0.6) 100%);
   pointer-events: none;
 }
+
 .hero__content {
   position: relative;
   z-index: 2;
@@ -240,6 +254,10 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   text-transform: uppercase;
   color: var(--red);
   margin-bottom: 16px;
+  /* Animacion de entrada */
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 600ms 100ms ease forwards;
 }
 .hero__title {
   font-family: var(--font-display);
@@ -248,6 +266,9 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   letter-spacing: 0.02em;
   color: var(--white);
   margin-bottom: 20px;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 600ms 220ms ease forwards;
 }
 .hero__title em {
   font-style: normal;
@@ -259,8 +280,22 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   line-height: 1.7;
   margin-bottom: 40px;
   max-width: 480px;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 600ms 340ms ease forwards;
 }
-.hero__actions { display: flex; gap: 16px; flex-wrap: wrap; }
+.hero__actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeUp 600ms 460ms ease forwards;
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
 
 /* Raya roja diagonal inferior */
 .hero__stripe {
@@ -269,6 +304,18 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   height: 6px;
   background: var(--red);
   clip-path: polygon(0 100%, 100% 0%, 100% 100%);
+  z-index: 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__eyebrow,
+  .hero__title,
+  .hero__sub,
+  .hero__actions {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
 }
 
 /* ===========================

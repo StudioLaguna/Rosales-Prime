@@ -19,6 +19,47 @@ burger.addEventListener('click', () => {
   burger.setAttribute('aria-expanded', isOpen);
 });
 
+navMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navMenu.classList.remove('open');
+    burger.classList.remove('active');
+    burger.setAttribute('aria-expanded', false);
+  });
+});
+
+// ---- PARALLAX HERO ----
+const heroParallax = document.getElementById('hero-parallax');
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (heroParallax && !prefersReducedMotion) {
+  let rafId = null;
+
+  const updateParallax = () => {
+    const scrollY = window.scrollY;
+    // La imagen se desplaza hacia arriba a 0.35x la velocidad del scroll
+    // Esto crea la ilusión de profundidad sin salirse del contenedor
+    heroParallax.style.transform = `translateY(${scrollY * 0.35}px)`;
+    rafId = null;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (!rafId) {
+      rafId = requestAnimationFrame(updateParallax);
+    }
+  }, { passive: true });
+}
+
+
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+burger.addEventListener('click', () => {
+  const isOpen = navMenu.classList.toggle('open');
+  burger.classList.toggle('active', isOpen);
+  burger.setAttribute('aria-expanded', isOpen);
+});
+
 // Cierra menu movil al hacer click en un link
 navMenu.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => {
